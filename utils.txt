@@ -1,0 +1,3 @@
+Backend inditas: uvicorn app.main:app --reload
+Frontend inditas: npm run dev
+DB ujrainditas: rm app.db (app.db torles), python init.py

@@ -3,8 +3,9 @@ Adatbázis inicializálás mintaadatokkal
 Futtatás: python -m app.init_db
 """
 from app.database import engine, SessionLocal, Base
-from app.modells.lesson import Lesson
+from app.models.lesson import Lesson
 from app.models.word import Word
+from app.models.user import User
 
 
 def init_db():
@@ -147,7 +148,12 @@ def init_db():
             Word(lesson_id=lesson5.id, word="milk", translation="tej",
                  example_sentence="Children need milk. (A gyerekeknek tejre van szükségük.)"),
         ]
-        db.add_all(words5)
+        # === ADMIN USER ===
+        admin = db.query(User).filter(User.name == "admin").first()
+        if not admin:
+            admin = User(name="admin", is_admin=True, is_premium=True)
+            db.add(admin)
+            print("✅ Admin user létrehozva: admin")
 
         db.commit()
         print("✅ Adatbázis sikeresen inicializálva!")

@@ -1,9 +1,8 @@
 from pydantic import BaseModel
-from typing import Optional
 
 class LessonBase(BaseModel):
     title: str
-    description: Optional[str] = None
+    description: str | None = None
     language: str
     level: str
     is_premium: bool = False

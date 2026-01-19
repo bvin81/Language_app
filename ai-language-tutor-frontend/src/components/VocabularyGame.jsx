@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function VocabularyGame({ lessonId }) {
+export default function VocabularyGame({ lessonId, user }) {  // user prop hozzáadva
   const [gameData, setGameData] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -42,7 +42,6 @@ export default function VocabularyGame({ lessonId }) {
       setScore(score + 1);
     }
 
-    // Következő kérdés 2 másodperc múlva
     setTimeout(() => {
       setShowResult(false);
       setSelectedAnswer(null);
@@ -50,9 +49,28 @@ export default function VocabularyGame({ lessonId }) {
       if (currentQuestion < gameData.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
       } else {
+        // Játék vége - eredmény mentése
+        saveProgress(score + (isCorrect ? 1 : 0), gameData.length);
         setIsFinished(true);
       }
     }, 2000);
+  };
+
+  const saveProgress = async (finalScore, total) => {
+    try {
+      await fetch(`${API_URL}/progress/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.id,
+          lesson_id: lessonId,
+          score: finalScore,
+          total: total
+        })
+      });
+    } catch (error) {
+      console.error("Hiba az eredmény mentésekor:", error);
+    }
   };
 
   if (!gameData) {
@@ -60,13 +78,17 @@ export default function VocabularyGame({ lessonId }) {
   }
 
   if (isFinished) {
+    const percentage = Math.round((score / gameData.length) * 100);
     return (
       <div style={{ textAlign: "center", padding: "2rem" }}>
         <h2>🎉 Játék vége!</h2>
         <p style={{ fontSize: "2rem" }}>
           Eredmény: {score} / {gameData.length}
         </p>
-        <button onClick={fetchGame} style={{ marginTop: "1rem" }}>
+        <p style={{ fontSize: "1.5rem", color: percentage >= 80 ? "#16a34a" : "#ea580c" }}>
+          {percentage}%
+        </p>
+        <button onClick={fetchGame} style={{ marginTop: "1rem", padding: "0.5rem 1rem", cursor: "pointer" }}>
           Újra játszom
         </button>
       </div>

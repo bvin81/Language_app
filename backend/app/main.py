@@ -1,7 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import users, lessons, words, games
+from app.routers import users, lessons, words, games, progress, admin
+from app.database import engine, Base
+from app.models.user import User
+from app.models.lesson import Lesson
+from app.models.word import Word
+
+# Táblák létrehozása
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AI Language Tutor API")
 
@@ -23,6 +30,8 @@ app.include_router(users.router)
 app.include_router(lessons.router)
 app.include_router(words.router)
 app.include_router(games.router)
+app.include_router(progress.router)
+app.include_router(admin.router)
 
 @app.get("/")
 def root():
