@@ -3,12 +3,16 @@ import Login from "./components/Login";
 import LessonList from "./pages/LessonList";
 import Statistics from "./pages/Statistics";
 import VocabularyGame from "./components/VocabularyGame";
-import PremiumButton from "./components/PremiumButton";
+import GrammarGame from "./components/GrammarGame";
+import ListeningGame from "./components/ListeningGame";
+import ReadingGame from "./components/ReadingGame";
+import SpeakingGame from "./components/SpeakingGame";
 
 function App() {
   const [user, setUser] = useState(null);
   const [selectedLesson, setSelectedLesson] = useState(null);
-  const [currentPage, setCurrentPage] = useState("lessons"); // új
+  const [selectedGameType, setSelectedGameType] = useState(null); // "vocabulary" vagy "grammar"
+  const [currentPage, setCurrentPage] = useState("lessons");
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -21,11 +25,21 @@ function App() {
     return <Login onLogin={setUser} />;
   }
 
-  if (selectedLesson) {
+  const handleBackToLessons = () => {
+    setSelectedLesson(null);
+    setSelectedGameType(null);
+  };
+
+  const handleSelectGame = (lessonId, gameType) => {
+    setSelectedLesson(lessonId);
+    setSelectedGameType(gameType);
+  };
+
+  if (selectedLesson && selectedGameType) {
     return (
       <div>
         <button
-          onClick={() => setSelectedLesson(null)}
+          onClick={handleBackToLessons}
           style={{
             margin: "1rem",
             padding: "0.5rem 1rem",
@@ -38,7 +52,21 @@ function App() {
         >
           ← Vissza a leckékhez
         </button>
-        <VocabularyGame lessonId={selectedLesson} user={user} />
+        {selectedGameType === "vocabulary" && (
+          <VocabularyGame lessonId={selectedLesson} user={user} />
+        )}
+        {selectedGameType === "grammar" && (
+          <GrammarGame lessonId={selectedLesson} user={user} />
+        )}
+        {selectedGameType === "listening" && (
+          <ListeningGame lessonId={selectedLesson} user={user} />
+        )}
+        {selectedGameType === "reading" && (
+          <ReadingGame lessonId={selectedLesson} user={user} />
+        )}
+        {selectedGameType === "speaking" && (
+          <SpeakingGame lessonId={selectedLesson} user={user} />
+        )}
       </div>
     );
   }
@@ -82,11 +110,10 @@ function App() {
         </div>
 
         <div>
-          Bejelentkezve: <strong>{user.name}</strong> {user.is_premium && "👑"}
+          Bejelentkezve: <strong>{user.name}</strong>
         </div>
 
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          <PremiumButton user={user} onUpgrade={setUser} />
           <button
             onClick={() => {
               localStorage.removeItem("user");
@@ -107,7 +134,7 @@ function App() {
       </div>
 
       {currentPage === "lessons" && (
-        <LessonList onSelectLesson={setSelectedLesson} user={user} />
+        <LessonList onSelectGame={handleSelectGame} user={user} />
       )}
 
       {currentPage === "statistics" && (

@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+env/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Frontend
+ai-language-tutor-frontend/node_modules/
+ai-language-tutor-frontend/dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
+nul

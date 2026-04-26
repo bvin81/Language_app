@@ -9,5 +9,4 @@ class User(Base):
     name = Column(String, nullable=False, unique=True)
     age = Column(Integer)
     level = Column(String, default="beginner")
-    is_premium = Column(Boolean, default=False)  # ÚJ1
-    is_admin = Column(Boolean, default=False) #ÚJ2
+    is_admin = Column(Boolean, default=False)

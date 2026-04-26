@@ -23,7 +23,6 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
     return {
         "id": str(user.id),
         "name": user.name,
-        "is_premium": user.is_premium,
         "level": user.level
     }
 
@@ -38,16 +37,3 @@ def create_user(name: str, age: int = None, level: str = "beginner", db: Session
     return crud.create_user(db, name, age, level)
 
 
-@router.post("/{user_id}/upgrade-premium")
-def upgrade_to_premium(user_id: str, db: Session = Depends(get_db)):
-    """Prémium státusz aktiválása"""
-    user = crud.update_user_premium(db, user_id, True)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return {
-        "id": str(user.id),
-        "name": user.name,
-        "is_premium": user.is_premium,
-        "level": user.level
-    }

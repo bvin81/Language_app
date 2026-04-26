@@ -1,0 +1,470 @@
+/* === AI Language Tutor - Gyerekbarát stílusok === */
+
+/* Alapok */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Nunito', 'Comic Sans MS', 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #333;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Fő konténer */
+.app-container {
+  background: rgba(255, 255, 255, 0.95);
+  min-height: 100vh;
+  border-radius: 0;
+}
+
+/* Fejléc */
+.header {
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.header-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Navigációs gombok */
+.nav-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.nav-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.nav-btn:active {
+  transform: translateY(0);
+}
+
+.nav-btn-active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.nav-btn-inactive {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+/* Lecke kártyák */
+.lesson-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+}
+
+.lesson-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.lesson-card-free {
+  border-color: #4ade80;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.lesson-card-premium {
+  border-color: #fbbf24;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+/* Játék gombok */
+.game-btn {
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.game-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.game-btn:active {
+  transform: scale(0.98);
+}
+
+.game-btn-vocabulary {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  color: white;
+}
+
+.game-btn-grammar {
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+  color: white;
+}
+
+.game-btn-listening {
+  background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);
+  color: white;
+}
+
+.game-btn-reading {
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+  color: white;
+}
+
+.game-btn-locked {
+  background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+  color: white;
+  cursor: not-allowed;
+}
+
+/* Válasz gombok */
+.answer-btn {
+  padding: 1.25rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: 3px solid #e5e7eb;
+  border-radius: 15px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.answer-btn:hover:not(:disabled) {
+  border-color: #667eea;
+  background: #f5f3ff;
+  transform: translateX(5px);
+}
+
+.answer-btn:disabled {
+  cursor: default;
+}
+
+.answer-btn-correct {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  border-color: #16a34a;
+  color: white;
+  animation: pulse-correct 0.5s ease;
+}
+
+.answer-btn-wrong {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  border-color: #dc2626;
+  color: white;
+  animation: shake 0.5s ease;
+}
+
+/* Animációk */
+@keyframes pulse-correct {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes confetti {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+}
+
+/* Eredmény dobozok */
+.result-box {
+  padding: 1.5rem;
+  border-radius: 20px;
+  text-align: center;
+  animation: bounce-in 0.5s ease;
+}
+
+.result-box-correct {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  border: 3px solid #4ade80;
+}
+
+.result-box-wrong {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border: 3px solid #f87171;
+}
+
+/* Pontszám */
+.score-display {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #92400e;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Nehézségi szint jelzők */
+.difficulty-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.difficulty-easy {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #047857;
+}
+
+.difficulty-medium {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+}
+
+.difficulty-hard {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+}
+
+/* Premium badge */
+.premium-badge {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+}
+
+/* Játék vége képernyő */
+.game-over {
+  text-align: center;
+  padding: 3rem;
+  animation: slide-up 0.5s ease;
+}
+
+.game-over-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.game-over-score {
+  font-size: 4rem;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+.game-over-percentage {
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 0.5rem 2rem;
+  border-radius: 50px;
+  display: inline-block;
+}
+
+.percentage-excellent {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  color: white;
+}
+
+.percentage-good {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: white;
+}
+
+.percentage-needs-work {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  color: white;
+}
+
+/* Újra próbálom gomb */
+.retry-btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-top: 2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.retry-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+}
+
+/* Audio lejátszó */
+.audio-player {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  padding: 2rem;
+  border-radius: 25px;
+  text-align: center;
+  border: 3px solid #0891b2;
+}
+
+.play-btn {
+  padding: 1.5rem 3rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(8, 145, 178, 0.4);
+}
+
+.play-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(8, 145, 178, 0.5);
+}
+
+.play-btn:disabled {
+  background: #94a3b8;
+  cursor: default;
+}
+
+/* Szöveg olvasó */
+.reading-content {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  padding: 2rem;
+  border-radius: 20px;
+  border: 3px solid #4ade80;
+  line-height: 2;
+  font-size: 1.2rem;
+}
+
+/* Betöltés animáció */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #e5e7eb;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Magyarázat doboz */
+.explanation-box {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 2px solid #fbbf24;
+  margin-top: 1rem;
+}
+
+/* Reszponzív */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .lesson-card {
+    padding: 1rem;
+  }
+
+  .game-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .answer-btn {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .game-over-title {
+    font-size: 1.8rem;
+  }
+
+  .game-over-score {
+    font-size: 2.5rem;
+  }
+}
+
+/* Akadálymentesítés */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Magas kontraszt mód */
+@media (prefers-contrast: high) {
+  .answer-btn {
+    border-width: 3px;
+  }
+
+  .game-btn,
+  .nav-btn {
+    border: 2px solid currentColor;
+  }
+}

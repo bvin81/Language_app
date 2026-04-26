@@ -9,7 +9,7 @@ export default function AdminPanel({ user }) {
     description: "",
     language: "romanian",
     level: "beginner",
-    is_premium: false,
+    grade: 1,
     order: 0
   });
 
@@ -37,7 +37,7 @@ export default function AdminPanel({ user }) {
       description: "",
       language: "romanian",
       level: "beginner",
-      is_premium: false,
+      grade: 1,
       order: 0
     });
 
@@ -98,14 +98,16 @@ export default function AdminPanel({ user }) {
             <option value="intermediate">Intermediate</option>
             <option value="advanced">Advanced</option>
           </select>
-          <label style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-            <input
-              type="checkbox"
-              checked={newLesson.is_premium}
-              onChange={(e) => setNewLesson({...newLesson, is_premium: e.target.checked})}
-            />
-            Prémium lecke
-          </label>
+          <select
+            value={newLesson.grade}
+            onChange={(e) => setNewLesson({...newLesson, grade: parseInt(e.target.value)})}
+            style={{ padding: "0.5rem", border: "1px solid #ddd", borderRadius: "4px" }}
+          >
+            <option value={1}>1. Osztály</option>
+            <option value={2}>2. Osztály</option>
+            <option value={3}>3. Osztály</option>
+            <option value={4}>4. Osztály</option>
+          </select>
           <button
             type="submit"
             style={{
@@ -139,7 +141,9 @@ export default function AdminPanel({ user }) {
           >
             <div>
               <strong>{lesson.title}</strong>
-              {lesson.is_premium && <span style={{ marginLeft: "0.5rem", color: "#ea580c" }}>👑</span>}
+              <span style={{ marginLeft: "0.5rem", color: "#3b82f6", fontSize: "0.8rem" }}>
+                {lesson.grade}. osztály
+              </span>
               <div style={{ fontSize: "0.9rem", color: "#666" }}>
                 {lesson.language} • {lesson.level}
               </div>

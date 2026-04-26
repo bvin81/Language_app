@@ -49,13 +49,123 @@ def get_vocabulary_game(lesson_id: int, db: Session = Depends(get_db)):
 @router.get("/grammar/{lesson_id}")
 def get_grammar_game(lesson_id: int, db: Session = Depends(get_db)):
     """
-    Nyelvtani játék placeholder
-    TODO: később kifejleszteni nyelvtani szabályokkal
+    Nyelvtani játék: különböző típusú nyelvtani gyakorlatok
+    - fill_blank: Mondatkiegészítés
+    - multiple_choice: Helyes forma kiválasztása
+    - word_order: Szórend
     """
-    return {
-        "message": "Nyelvtani játék - fejlesztés alatt",
-        "lesson_id": lesson_id
-    }
+    exercises = crud.get_grammar_exercises_by_lesson(db, lesson_id)
+
+    if len(exercises) < 1:
+        return {"error": "Nincs nyelvtani gyakorlat ehhez a leckéhez", "questions": []}
+
+    game_questions = []
+    sample_size = min(5, len(exercises))
+    selected_exercises = random.sample(exercises, sample_size)
+
+    for exercise in selected_exercises:
+        # Válaszlehetőségek összeállítása
+        options = [exercise.correct_answer]
+
+        if exercise.wrong_answers:
+            wrong_list = [w.strip() for w in exercise.wrong_answers.split(",")]
+            options.extend(wrong_list)
+
+        # Word order típusnál a szavakat keverjük
+        if exercise.exercise_type == "word_order":
+            # A kérdés tartalmazza a kevert szavakat
+            words = [w.strip() for w in exercise.question.split(",")]
+            random.shuffle(words)
+            question_text = " / ".join(words)
+        else:
+            question_text = exercise.question
+
+        random.shuffle(options)
+
+        game_questions.append({
+            "id": exercise.id,
+            "exercise_type": exercise.exercise_type,
+            "question": question_text,
+            "options": options,
+            "correct_answer": exercise.correct_answer,
+            "explanation": exercise.explanation,
+            "difficulty": exercise.difficulty
+        })
+
+    return {"questions": game_questions, "lesson_id": lesson_id}
+
+
+@router.get("/listening/{lesson_id}")
+def get_listening_game(lesson_id: int, db: Session = Depends(get_db)):
+    """
+    Hallásértés játék: audio fájlok meghallgatása és kérdések megválaszolása
+    """
+    exercises = crud.get_listening_exercises_by_lesson(db, lesson_id)
+
+    if len(exercises) < 1:
+        return {"error": "Nincs hallásértés gyakorlat ehhez a leckéhez", "questions": []}
+
+    game_questions = []
+    sample_size = min(5, len(exercises))
+    selected_exercises = random.sample(exercises, sample_size)
+
+    for exercise in selected_exercises:
+        # Válaszlehetőségek összeállítása
+        options = [exercise.correct_answer]
+        wrong_list = [w.strip() for w in exercise.wrong_answers.split(",")]
+        options.extend(wrong_list)
+        random.shuffle(options)
+
+        game_questions.append({
+            "id": exercise.id,
+            "audio_url": exercise.audio_url,
+            "question": exercise.question,
+            "options": options,
+            "correct_answer": exercise.correct_answer,
+            "transcript": exercise.transcript,
+            "difficulty": exercise.difficulty,
+            "duration_seconds": exercise.duration_seconds
+        })
+
+    return {"questions": game_questions, "lesson_id": lesson_id}
+
+
+@router.get("/reading/{lesson_id}")
+def get_reading_game(lesson_id: int, db: Session = Depends(get_db)):
+    """
+    Szövegértés játék: szöveg olvasása és kérdések megválaszolása
+    """
+    exercises = crud.get_reading_exercises_by_lesson(db, lesson_id)
+
+    if len(exercises) < 1:
+        return {"error": "Nincs szövegértés gyakorlat ehhez a leckéhez", "readings": []}
+
+    readings = []
+
+    for exercise in exercises:
+        questions = []
+        for q in exercise.questions:
+            options = [q.correct_answer]
+            wrong_list = [w.strip() for w in q.wrong_answers.split(",")]
+            options.extend(wrong_list)
+            random.shuffle(options)
+
+            questions.append({
+                "id": q.id,
+                "question": q.question,
+                "options": options,
+                "correct_answer": q.correct_answer
+            })
+
+        readings.append({
+            "reading_id": exercise.id,
+            "title": exercise.title,
+            "content": exercise.content,
+            "difficulty": exercise.difficulty,
+            "questions": questions
+        })
+
+    return {"readings": readings, "lesson_id": lesson_id}
 
 
 @router.post("/check-answer")

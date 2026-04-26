@@ -1,3 +1,10 @@
+---
+project: README
+status: active
+tags: [project, main]
+created: 2026-04-01
+---
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

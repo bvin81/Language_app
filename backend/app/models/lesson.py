@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String
 from app.database import Base
 
 class Lesson(Base):
@@ -9,5 +9,5 @@ class Lesson(Base):
     description = Column(String)
     language = Column(String, nullable=False)  # "romanian" vagy "english"
     level = Column(String, nullable=False)  # "beginner", "intermediate", "advanced"
-    is_premium = Column(Boolean, default=False)  # Freemium model
+    grade = Column(Integer, default=1)  # Osztály (1-4)
     order = Column(Integer, default=0)  # Sorrend

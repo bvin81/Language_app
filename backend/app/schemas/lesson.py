@@ -5,7 +5,7 @@ class LessonBase(BaseModel):
     description: str | None = None
     language: str
     level: str
-    is_premium: bool = False
+    grade: int = 1
     order: int = 0
 
 class LessonCreate(LessonBase):
