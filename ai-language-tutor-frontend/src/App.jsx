@@ -7,12 +7,14 @@ import GrammarGame from "./components/GrammarGame";
 import ListeningGame from "./components/ListeningGame";
 import ReadingGame from "./components/ReadingGame";
 import SpeakingGame from "./components/SpeakingGame";
+import { useLanguage } from "./i18n/LanguageContext";
 
 function App() {
   const [user, setUser] = useState(null);
   const [selectedLesson, setSelectedLesson] = useState(null);
-  const [selectedGameType, setSelectedGameType] = useState(null); // "vocabulary" vagy "grammar"
+  const [selectedGameType, setSelectedGameType] = useState(null);
   const [currentPage, setCurrentPage] = useState("lessons");
+  const { t, lang, toggle } = useLanguage();
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -35,38 +37,50 @@ function App() {
     setSelectedGameType(gameType);
   };
 
+  const langToggleBtn = (
+    <button
+      onClick={toggle}
+      style={{
+        padding: "0.4rem 0.9rem",
+        backgroundColor: lang === "en" ? "#1d4ed8" : "#6b7280",
+        color: "white",
+        border: "none",
+        borderRadius: "6px",
+        cursor: "pointer",
+        fontWeight: "bold",
+        fontSize: "0.85rem",
+        letterSpacing: "0.05em"
+      }}
+      title={lang === "hu" ? "Switch to English" : "Váltás magyarra"}
+    >
+      {lang === "hu" ? "EN" : "HU"}
+    </button>
+  );
+
   if (selectedLesson && selectedGameType) {
     return (
       <div>
-        <button
-          onClick={handleBackToLessons}
-          style={{
-            margin: "1rem",
-            padding: "0.5rem 1rem",
-            cursor: "pointer",
-            backgroundColor: "#3b82f6",
-            color: "white",
-            border: "none",
-            borderRadius: "8px"
-          }}
-        >
-          ← Vissza a leckékhez
-        </button>
-        {selectedGameType === "vocabulary" && (
-          <VocabularyGame lessonId={selectedLesson} user={user} />
-        )}
-        {selectedGameType === "grammar" && (
-          <GrammarGame lessonId={selectedLesson} user={user} />
-        )}
-        {selectedGameType === "listening" && (
-          <ListeningGame lessonId={selectedLesson} user={user} />
-        )}
-        {selectedGameType === "reading" && (
-          <ReadingGame lessonId={selectedLesson} user={user} />
-        )}
-        {selectedGameType === "speaking" && (
-          <SpeakingGame lessonId={selectedLesson} user={user} />
-        )}
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1rem" }}>
+          <button
+            onClick={handleBackToLessons}
+            style={{
+              padding: "0.5rem 1rem",
+              cursor: "pointer",
+              backgroundColor: "#3b82f6",
+              color: "white",
+              border: "none",
+              borderRadius: "8px"
+            }}
+          >
+            {t.backToLessons}
+          </button>
+          {langToggleBtn}
+        </div>
+        {selectedGameType === "vocabulary" && <VocabularyGame lessonId={selectedLesson} user={user} />}
+        {selectedGameType === "grammar" && <GrammarGame lessonId={selectedLesson} user={user} />}
+        {selectedGameType === "listening" && <ListeningGame lessonId={selectedLesson} user={user} />}
+        {selectedGameType === "reading" && <ReadingGame lessonId={selectedLesson} user={user} />}
+        {selectedGameType === "speaking" && <SpeakingGame lessonId={selectedLesson} user={user} />}
       </div>
     );
   }
@@ -92,7 +106,7 @@ function App() {
               cursor: "pointer"
             }}
           >
-            📚 Leckék
+            {t.navLessons}
           </button>
           <button
             onClick={() => setCurrentPage("statistics")}
@@ -105,15 +119,13 @@ function App() {
               cursor: "pointer"
             }}
           >
-            📊 Statisztika
+            {t.navStatistics}
           </button>
         </div>
 
-        <div>
-          Bejelentkezve: <strong>{user.name}</strong>
-        </div>
-
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          {langToggleBtn}
+          <span>{t.loggedIn} <strong>{user.name}</strong></span>
           <button
             onClick={() => {
               localStorage.removeItem("user");
@@ -128,18 +140,13 @@ function App() {
               cursor: "pointer"
             }}
           >
-            Kijelentkezés
+            {t.logout}
           </button>
         </div>
       </div>
 
-      {currentPage === "lessons" && (
-        <LessonList onSelectGame={handleSelectGame} user={user} />
-      )}
-
-      {currentPage === "statistics" && (
-        <Statistics user={user} />
-      )}
+      {currentPage === "lessons" && <LessonList onSelectGame={handleSelectGame} user={user} />}
+      {currentPage === "statistics" && <Statistics user={user} />}
     </div>
   );
 }

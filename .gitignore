@@ -30,4 +30,20 @@ Thumbs.db
 
 # Claude Code
 .claude/
+CLAUDE.md
 nul
+
+# Personal / dev notes
+utils.txt
+BUILD.md
+
+# Copyrighted content
+Clasa 1/
+Clasa 2/
+
+# User-generated media
+backend/static/audio/
+
+# Dev/migration scripts
+backend/add_grade3_4.py
+backend/main_updated.py
